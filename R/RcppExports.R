@@ -62,6 +62,18 @@ rcpp_osmdata_sc <- function(st) {
     .Call(`_osmdata_rcpp_osmdata_sc`, st)
 }
 
+#' rcpp_osmdata_sc_infile
+#'
+#' Return OSM data in silicate (SC) format
+#'
+#' @param st Text contents of an overpass API query
+#' @return Rcpp::List objects of OSM data
+#' 
+#' @noRd 
+rcpp_osmdata_sc_infile <- function(st) {
+    .Call(`_osmdata_rcpp_osmdata_sc_infile`, st)
+}
+
 #' get_osm_relations
 #'
 #' Return a dual Rcpp::List containing all OSM relations, the firmt element of

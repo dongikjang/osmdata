@@ -177,3 +177,90 @@ Rcpp::List rcpp_osmdata_sc (const std::string& st)
     
     return ret;
 }
+
+
+// Assuming XmlDataSC and the helper functions (rel_membs_as_list and way_membs_as_list) are defined elsewhere
+
+// [[Rcpp::export]]
+Rcpp::List rcpp_osmdata_sc_infile(const std::string& file_path) {
+    // Read the osmdata.xml file from the given file path
+    std::ifstream file(file_path);
+    if (!file.is_open()) {
+        Rcpp::stop("Failed to open file: " + file_path);
+    }
+
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    std::string st = buffer.str();
+
+    file.close();
+
+    // Process the XML data
+    XmlDataSC xml(st);
+
+    Rcpp::DataFrame vertex = Rcpp::DataFrame::create(
+        Rcpp::Named("x_") = xml.get_vx(),
+        Rcpp::Named("y_") = xml.get_vy(),
+        Rcpp::Named("vertex_") = xml.get_vert_id(),
+        Rcpp::_["stringsAsFactors"] = false);
+
+    Rcpp::DataFrame edge = Rcpp::DataFrame::create(
+        Rcpp::Named(".vx0") = xml.get_vx0(),
+        Rcpp::Named(".vx1") = xml.get_vx1(),
+        Rcpp::Named("edge_") = xml.get_edge(),
+        Rcpp::_["stringsAsFactors"] = false);
+
+    Rcpp::DataFrame oXe = Rcpp::DataFrame::create(
+        Rcpp::Named("edge_") = xml.get_edge(),
+        Rcpp::Named("object_") = xml.get_object(),
+        Rcpp::_["stringsAsFactors"] = false);
+
+    Rcpp::DataFrame obj_node = Rcpp::DataFrame::create(
+        Rcpp::Named("vertex_") = xml.get_node_id(),
+        Rcpp::Named("key") = xml.get_node_key(),
+        Rcpp::Named("value") = xml.get_node_val(),
+        Rcpp::_["stringsAsFactors"] = false);
+
+    Rcpp::DataFrame obj_way = Rcpp::DataFrame::create(
+        Rcpp::Named("object_") = xml.get_way_id(),
+        Rcpp::Named("key") = xml.get_way_key(),
+        Rcpp::Named("value") = xml.get_way_val(),
+        Rcpp::_["stringsAsFactors"] = false);
+
+    Rcpp::DataFrame obj_rel_memb = Rcpp::DataFrame::create(
+        Rcpp::Named("relation_") = xml.get_rel_memb_id(),
+        Rcpp::Named("member") = xml.get_rel_ref(),
+        Rcpp::Named("type") = xml.get_rel_memb_type(),
+        Rcpp::Named("role") = xml.get_rel_role(),
+        Rcpp::_["stringsAsFactors"] = false);
+
+    Rcpp::DataFrame obj_rel_kv = Rcpp::DataFrame::create(
+        Rcpp::Named("relation_") = xml.get_rel_kv_id(),
+        Rcpp::Named("key") = xml.get_rel_key(),
+        Rcpp::Named("value") = xml.get_rel_val(),
+        Rcpp::_["stringsAsFactors"] = false);
+
+    Rcpp::List rel_membs = rel_membs_as_list(xml),
+               way_membs = way_membs_as_list(xml);
+
+    Rcpp::List ret(9);
+    ret[0] = vertex;
+    ret[1] = edge;
+    ret[2] = oXe;
+    ret[3] = obj_node;
+    ret[4] = obj_way; // The SC object table
+    ret[5] = obj_rel_memb;
+    ret[6] = obj_rel_kv;
+    ret[7] = Rcpp::as<Rcpp::List>(way_membs);
+    ret[8] = Rcpp::as<Rcpp::List>(rel_membs);
+
+    std::vector<std::string> retnames{"vertex",
+                                      "edge", "object_link_edge",
+                                      "nodes", "object",
+                                      "relation_members",
+                                      "relation_properties",
+                                      "way_membs", "rel_membs"};
+    ret.attr("names") = retnames;
+
+    return ret;
+}
