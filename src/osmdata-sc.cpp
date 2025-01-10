@@ -31,6 +31,10 @@
 
 #include "osmdata.h"
 #include "osmdata-sc.h"
+#include <Rcpp.h>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 // Function to generate IDs for the edges in each way
 std::string random_id (size_t len) {
