@@ -10,6 +10,7 @@
 /* .Call calls */
 extern SEXP _osmdata_rcpp_osmdata_df(SEXP);
 extern SEXP _osmdata_rcpp_osmdata_sc(SEXP);
+extern SEXP _osmdata_rcpp_osmdata_sc_infile(SEXP);
 extern SEXP _osmdata_rcpp_osmdata_sf(SEXP);
 extern SEXP _osmdata_rcpp_osmdata_sp(SEXP);
 
