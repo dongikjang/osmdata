@@ -19,7 +19,10 @@
 #' @note Class constructor should never be used directly, and is only exported
 #' to provide access to the print method
 #'
-#' @family package
+#' @family class
+#' @examples
+#' # This function should not need to be called directly!
+#' osmdata ()
 #' @export
 osmdata <- function (bbox = NULL, overpass_call = NULL, meta = NULL,
                      osm_points = NULL, osm_lines = NULL, osm_polygons = NULL,
@@ -35,7 +38,7 @@ osmdata <- function (bbox = NULL, overpass_call = NULL, meta = NULL,
         osm_multilines = osm_multilines,
         osm_multipolygons = osm_multipolygons
     )
-    class (obj) <- append (class (obj), "osmdata")
+    class (obj) <- append ("osmdata", class (obj))
 
     return (obj)
 }

@@ -2,12 +2,12 @@
 % Please edit documentation in R/osm-extract.R
 \name{osm_multilines}
 \alias{osm_multilines}
-\title{Extract all \code{osm_multilines} from an osmdata object}
+\title{Extract all \code{osm_multilines} from an \code{osmdata_sf} object}
 \usage{
 osm_multilines(dat, id)
 }
 \arguments{
-\item{dat}{An object of class \link{osmdata}}
+\item{dat}{An object of class \code{osmdata_sf}}
 
 \item{id}{OSM identification of one of more objects for which multilines are
 to be extracted}
@@ -23,8 +23,8 @@ object(s) which contain the object specified by \code{id}.
 }
 \examples{
 \dontrun{
-dat <- opq ("London UK") \%>\%
-    add_osm_feature (key = "name", value = "Thames", exact = FALSE) \%>\%
+dat <- opq ("London UK") |>
+    add_osm_feature (key = "name", value = "Thames", exact = FALSE) |>
     osmdata_sf ()
 # Get ids of lines called "The Thames":
 id <- rownames (dat$osm_lines [which (dat$osm_lines$name == "The Thames"), ])

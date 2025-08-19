@@ -33,7 +33,7 @@
 #'     format
 #' \item \link{osmdata_sc}: Return OSM data in \pkg{silicate} format
 #' \item \link{osmdata_sf}: Return OSM data in \pkg{sf} format
-#' \item \link{osmdata_sp}: Return OSM data in \pkg{sp} format
+#' \item \link{osmdata_sp}: Return OSM data in \pkg{sp} format (DEPRECATED)
 #' \item \link{osmdata_xml}: Return OSM data in \pkg{xml2} format
 #' }
 #'
@@ -46,23 +46,12 @@
 #' \item `osm_multipolygons`: Extract all `osm_multipolygons` objects
 #' }
 #'
-#' @name osmdata
 #' @docType package
 #' @family package
-#' @author Mark Padgham, Bob Rudis, Robin Lovelace, Maëlle Salmon, Joan Maspons
-#' @importFrom magrittr %>%
+#' @author Joan Maspons, Mark Padgham, Bob Rudis, Robin Lovelace, Maëlle Salmon
+#' @keywords internal
 #' @importFrom methods is slot
 #' @importFrom Rcpp evalCpp
 #' @importFrom utils browseURL read.table
 #' @useDynLib osmdata, .registration = TRUE
 "_PACKAGE"
-
-#' Pipe operator
-#'
-#' @name %>%
-#' @rdname pipe
-#' @keywords internal
-#' @export
-#' @importFrom magrittr %>%
-#' @usage lhs \%>\% rhs
-NULL

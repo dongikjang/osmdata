@@ -1,16 +1,31 @@
 #' unique_osmdata
 #'
-#' Reduce the components of an \link{osmdata} object to only unique items of
-#' each type. That is, reduce `$osm_points` to only those points not
+#' Reduce the components of an \link{osmdata} object in 'sf' or 'sp' form (that
+#' is, obtained from [osmdata_sf()] or [osmdata_sp()] to only unique
+#' items of each type. That is, reduce `$osm_points` to only those points not
 #' present in other objects (lines, polygons, etc.); reduce `$osm_lines` to
 #' only those lines not present in multiline objects; and reduce
 #' `$osm_polygons` to only those polygons not present in multipolygon
 #' objects. This renders an \link{osmdata} object more directly compatible with
 #' typical output of \pkg{sf}.
 #'
-#' @param dat An \link{osmdata} object
+#' @param dat An object of class `osmdata_sf` or `osmdata_sp`
 #' @return Equivalent object reduced to only unique objects of each type
 #' @family transform
+#'
+#' @examples
+#' \dontrun{
+#' query <- opq ("colchester uk") |>
+#'     add_osm_feature (key = "highway")
+#' # Then extract data from 'Overpass' API
+#' dat <- osmdata_sf (query)
+#' dat
+#' # Then reduce to unique items of each type only:
+#' dat <- unique_osmdata (dat)
+#' dat
+#' }
+#' # And objects of each type (points, line, polygons, and so on) now have
+#' # fewer members.
 #' @export
 unique_osmdata <- function (dat) {
 

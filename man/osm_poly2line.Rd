@@ -7,7 +7,7 @@
 osm_poly2line(osmdat)
 }
 \arguments{
-\item{osmdat}{An \link{osmdata} object.}
+\item{osmdat}{An \code{osmdata_sf} object.}
 }
 \value{
 Modified version of same object with all \code{osm_polygons}
@@ -25,15 +25,16 @@ repeated as \code{LINESTRING} objects in \code{osm_lines}.
 }
 \examples{
 \dontrun{
-dat <- opq ("colchester uk") \%>\%
-    add_osm_feature (key = "highway") \%>\%
-    osmdata_sf ()
+query <- opq ("colchester uk") |>
+    add_osm_feature (key = "highway")
+# Then extract data from 'Overpass' API
+dat <- osmdata_sf (query)
 # colchester has lots of roundabouts, and these are stored in 'osm_polygons'
 # rather than 'osm_lines'. The former can be merged with the latter by:
 dat2 <- osm_poly2line (dat)
+}
 # 'dat2' will have more lines than 'dat', but the same number of polygons
 # (they are left unchanged.)
-}
 }
 \seealso{
 Other transform: 

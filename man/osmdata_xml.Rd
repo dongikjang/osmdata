@@ -36,9 +36,11 @@ Objects of class \code{xml_document} can be saved as \code{.xml} or
 }
 \examples{
 \dontrun{
-q <- opq ("hampi india")
-q <- add_osm_feature (q, key = "historic", value = "ruins")
-osmdata_xml (q, filename = "hampi.osm")
+query <- opq ("hampi india") |>
+    add_osm_feature (key = "historic", value = "ruins")
+# Then extract data from 'Overpass' API and save to local file:
+osmdata_xml (query, filename = "hampi.osm")
+}
 
 # Complex query as a string (not possible with regular osmdata functions)
 q <- '[out:xml][timeout:50];
@@ -55,6 +57,7 @@ q <- '[out:xml][timeout:50];
     rel(pivot);
     out tags;'
 
+\dontrun{
 no_townhall <- osmdata_xml (q)
 no_townhall
 }

@@ -11,20 +11,17 @@ test_that ("trim_osm_data", {
     require (sf)
     expect_error (
         trim_osmdata (1, bb_poly = bb),
-        "unrecognised format: numeric"
+        "unrecognised dat class: numeric"
     )
-    expect_silent (x1 <- trim_osmdata (x0, bb_poly = bb))
+    expect_silent (x1 <- trim_osmdata (x0, bb_poly = bb, exclude = TRUE))
     expect_equal (nrow (x1$osm_points), 0)
     expect_equal (nrow (x1$osm_lines), 0)
     expect_equal (nrow (x1$osm_polygons), 0)
     expect_equal (nrow (x1$osm_multilines), 0)
     expect_equal (nrow (x1$osm_multipolygons), 0)
 
-    expect_silent (x1 <- trim_osmdata (x0,
-        bb_poly = bb,
-        exclude = FALSE
-    ))
-    expect_equal (nrow (x1$osm_points), 2)
+    expect_silent (x1 <- trim_osmdata (x0, bb_poly = bb, exclude = FALSE))
+    expect_equal (nrow (x1$osm_points), 4)
     expect_equal (nrow (x1$osm_lines), 1)
     expect_equal (nrow (x1$osm_polygons), 1)
     expect_equal (nrow (x1$osm_multilines), 0)
@@ -79,9 +76,9 @@ test_that ("bb_poly as sf/sc", {
     )
     x1 <- trim_osmdata (x0, bb, exclude = FALSE)
 
-    bb_sf <- sf::st_polygon (list (bb)) %>%
-        st_sfc () %>%
-        st_sf ()
+    bb_sf <- sf::st_polygon (list (bb)) |>
+        st_sfc () |>
+        st_sf (crs = 4326)
     expect_silent (x2 <- trim_osmdata (x0,
         bb_poly = bb_sf,
         exclude = FALSE

@@ -8,16 +8,16 @@
     "https://docs.ropensci.org/osmdata/",
     "https://CRAN.R-project.org/package=osmdata"
   ],
-  "codeRepository": "https://github.com/ropensci/osmdata/",
+  "codeRepository": "https://github.com/ropensci/osmdata",
   "issueTracker": "https://github.com/ropensci/osmdata/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.2.5.026",
+  "version": "0.2.5.063",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.4.1 (2024-06-14)",
+  "runtimePlatform": "R version 4.5.1 (2025-06-13)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -227,7 +227,7 @@
       "@type": "SoftwareApplication",
       "identifier": "R",
       "name": "R",
-      "version": ">= 3.2.4"
+      "version": ">= 4.1"
     },
     "2": {
       "@type": "SoftwareApplication",
@@ -255,34 +255,10 @@
     },
     "4": {
       "@type": "SoftwareApplication",
-      "identifier": "lubridate",
-      "name": "lubridate",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=lubridate"
-    },
-    "5": {
-      "@type": "SoftwareApplication",
-      "identifier": "magrittr",
-      "name": "magrittr",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=magrittr"
-    },
-    "6": {
-      "@type": "SoftwareApplication",
       "identifier": "methods",
       "name": "methods"
     },
-    "7": {
+    "5": {
       "@type": "SoftwareApplication",
       "identifier": "Rcpp",
       "name": "Rcpp",
@@ -295,7 +271,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=Rcpp"
     },
-    "8": {
+    "6": {
       "@type": "SoftwareApplication",
       "identifier": "reproj",
       "name": "reproj",
@@ -307,7 +283,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=reproj"
     },
-    "9": {
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "rvest",
       "name": "rvest",
@@ -319,7 +295,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rvest"
     },
-    "10": {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "tibble",
       "name": "tibble",
@@ -331,12 +307,12 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tibble"
     },
-    "11": {
+    "9": {
       "@type": "SoftwareApplication",
       "identifier": "utils",
       "name": "utils"
     },
-    "12": {
+    "10": {
       "@type": "SoftwareApplication",
       "identifier": "xml2",
       "name": "xml2",
@@ -366,7 +342,7 @@
     "r-package",
     "peer-reviewed"
   ],
-  "fileSize": "17525.157KB",
+  "fileSize": "19047.106KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",

@@ -5,7 +5,7 @@
 #' those with the `osm_lines` component to yield a single \pkg{sf}
 #' `data.frame` of all highways, whether polygonal or not.
 #'
-#' @param osmdat An \link{osmdata} object.
+#' @param osmdat An `osmdata_sf` object.
 #' @return Modified version of same object with all `osm_polygons`
 #' objects merged into `osm_lines`.
 #'
@@ -13,21 +13,22 @@
 #' repeated as `LINESTRING` objects in `osm_lines`.
 #'
 #' @family transform
-#' @export
 #' @examples
 #' \dontrun{
-#' dat <- opq ("colchester uk") %>%
-#'     add_osm_feature (key = "highway") %>%
-#'     osmdata_sf ()
+#' query <- opq ("colchester uk") |>
+#'     add_osm_feature (key = "highway")
+#' # Then extract data from 'Overpass' API
+#' dat <- osmdata_sf (query)
 #' # colchester has lots of roundabouts, and these are stored in 'osm_polygons'
 #' # rather than 'osm_lines'. The former can be merged with the latter by:
 #' dat2 <- osm_poly2line (dat)
+#' }
 #' # 'dat2' will have more lines than 'dat', but the same number of polygons
 #' # (they are left unchanged.)
-#' }
+#' @export
 osm_poly2line <- function (osmdat) {
 
-    if (!is (osmdat, "osmdata_sf")) {
+    if (!inherits (osmdat, "osmdata_sf")) {
         stop ("osm_poly2line only works for objects of class osmdata_sf")
     }
 

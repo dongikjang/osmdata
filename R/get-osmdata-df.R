@@ -1,7 +1,7 @@
 #' Return an OSM Overpass query as a \link{data.frame} object.
 #'
 #'
-#' @inheritParams osmdata_sp
+#' @inheritParams osmdata_sf
 #' @param q An object of class `overpass_query` constructed with
 #'      \link{opq} and \link{add_osm_feature} or a string with a valid query, such
 #'      as `"(node(39.4712701,-0.3841326,39.4713799,-0.3839475);); out;"`.
@@ -9,8 +9,8 @@
 #'      will not include the query. See examples below.
 #' @param stringsAsFactors Should character strings in the 'data.frame' be
 #'      coerced to factors?
-#' @return A `data.frame` with id, type and tags of the the objects from the
-#'      query.
+#' @return A `data.frame` inheriting from `osmdata_data.frame` class with id, type
+#'      and tags of the the objects from the query.
 #'
 #' @details If you are not interested in the geometries of the results, it's a
 #'      good option to query for objects that match the features only and forget
@@ -22,12 +22,14 @@
 #'
 #' @examples
 #' \dontrun{
-#' hampi_df <- opq ("hampi india") %>%
-#'     add_osm_feature (key = "historic", value = "ruins") %>%
-#'     osmdata_data_frame ()
+#' query <- opq ("hampi india") |>
+#'     add_osm_feature (key = "historic", value = "ruins")
+#' # Then extract data from 'Overpass' API
+#' hampi_df <- osmdata_data_frame (query)
 #' attr (hampi_df, "bbox")
 #' attr (hampi_df, "overpass_call")
 #' attr (hampi_df, "meta")
+#' }
 #'
 #' # Complex query as a string (not possible with regular osmdata functions)
 #' q <- '[out:csv(::type, ::id, "name:ca", "wikidata")][timeout:50];
@@ -44,6 +46,7 @@
 #'     rel(pivot);
 #'     out tags;'
 #'
+#' \dontrun{
 #' no_townhall <- osmdata_data_frame (q)
 #' no_townhall
 #' }
@@ -122,6 +125,7 @@ osmdata_data_frame <- function (q,
     attr (df, "bbox") <- obj$bbox
     attr (df, "overpass_call") <- obj$overpass_call
     attr (df, "meta") <- obj$meta
+    class (df) <- c ("osmdata_data.frame", class (df))
 
     return (df)
 }

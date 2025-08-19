@@ -2,12 +2,12 @@
 % Please edit documentation in R/osm-extract.R
 \name{osm_points}
 \alias{osm_points}
-\title{Extract all \code{osm_points} from an osmdata object}
+\title{Extract all \code{osm_points} from an \code{osmdata_sf} object}
 \usage{
 osm_points(dat, id)
 }
 \arguments{
-\item{dat}{An object of class \link{osmdata}}
+\item{dat}{An object of class \code{osmdata_sf}}
 
 \item{id}{OSM identification of one or more objects for which points are to
 be extracted}
@@ -16,11 +16,11 @@ be extracted}
 An \pkg{sf} Simple Features Collection of points
 }
 \description{
-Extract all \code{osm_points} from an osmdata object
+Extract all \code{osm_points} from an \code{osmdata_sf} object
 }
 \examples{
 \dontrun{
-tr <- opq ("trentham australia") \%>\% osmdata_sf ()
+tr <- opq ("trentham australia") |> osmdata_sf ()
 coliban <- tr$osm_lines [which (tr$osm_lines$name == "Coliban River"), ]
 pts <- osm_points (tr, rownames (coliban)) # all points of river
 # the waterfall point:

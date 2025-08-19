@@ -221,8 +221,8 @@ get_multipolygon_ids <- function (x, dat, id) {
 
 sanity_check <- function (dat, id) {
 
-    if (!is (dat, "osmdata")) {
-        stop ("dat must be of class osmdata")
+    if (!inherits (dat, "osmdata_sf")) {
+        stop ("dat must be of class `osmdata_sf`")
     }
 
     if (!(is.character (id) | is.numeric (id))) {
@@ -237,9 +237,9 @@ sanity_check <- function (dat, id) {
 }
 
 
-#' Extract all `osm_points` from an osmdata object
+#' Extract all `osm_points` from an `osmdata_sf` object
 #'
-#' @param dat An object of class \link{osmdata}
+#' @param dat An object of class `osmdata_sf`
 #' @param id OSM identification of one or more objects for which points are to
 #' be extracted
 #'
@@ -250,7 +250,7 @@ sanity_check <- function (dat, id) {
 #'
 #' @examples
 #' \dontrun{
-#' tr <- opq ("trentham australia") %>% osmdata_sf ()
+#' tr <- opq ("trentham australia") |> osmdata_sf ()
 #' coliban <- tr$osm_lines [which (tr$osm_lines$name == "Coliban River"), ]
 #' pts <- osm_points (tr, rownames (coliban)) # all points of river
 #' # the waterfall point:
@@ -278,14 +278,14 @@ osm_points <- function (dat, id) {
     dat$osm_points [which (rownames (dat$osm_points) %in% ids), ]
 }
 
-#' Extract all `osm_lines` from an osmdata object
+#' Extract all `osm_lines` from an `osmdata_sf` object
 #'
 #' If `id` is of a point object, `osm_lines` will return all lines
 #' containing that point. If `id` is of a line or polygon object,
 #' `osm_lines` will return all lines which intersect the given line or
 #' polygon.
 #'
-#' @param dat An object of class \link{osmdata}
+#' @param dat An object of class `osmdata_sf`
 #' @param id OSM identification of one or more objects for which lines are to be
 #' extracted
 #' @return An \pkg{sf} Simple Features Collection of linestrings
@@ -295,16 +295,16 @@ osm_points <- function (dat, id) {
 #'
 #' @examples
 #' \dontrun{
-#' dat <- opq ("hengelo nl") %>%
-#'     add_osm_feature (key = "highway") %>%
+#' dat <- opq ("hengelo nl") |>
+#'     add_osm_feature (key = "highway") |>
 #'     osmdata_sf ()
-#' bus <- dat$osm_points [which (dat$osm_points$highway == "bus_stop"), ] %>%
+#' bus <- dat$osm_points [which (dat$osm_points$highway == "bus_stop"), ] |>
 #'     rownames () # all OSM IDs of bus stops
 #' osm_lines (dat, bus) # all highways containing bus stops
 #'
 #' # All lines which intersect with Piccadilly Circus in London, UK
-#' dat <- opq ("Fitzrovia London") %>%
-#'     add_osm_feature (key = "highway") %>%
+#' dat <- opq ("Fitzrovia London") |>
+#'     add_osm_feature (key = "highway") |>
 #'     osmdata_sf ()
 #' i <- which (dat$osm_polygons$name == "Piccadilly Circus")
 #' id <- rownames (dat$osm_polygons [i, ])
@@ -333,7 +333,7 @@ osm_lines <- function (dat, id) {
 }
 
 
-#' Extract all `osm_polygons` from an osmdata object
+#' Extract all `osm_polygons` from an `osmdata_sf` object
 #'
 #' If `id` is of a point object, `osm_polygons` will return all
 #' polygons containing that point. If `id` is of a line or polygon object,
@@ -341,7 +341,7 @@ osm_lines <- function (dat, id) {
 #' or polygon.
 #'
 #'
-#' @param dat An object of class \link{osmdata}
+#' @param dat An object of class `osmdata_sf`
 #' @param id OSM identification of one or more objects for which polygons are to
 #' be extracted
 #' @return An \pkg{sf} Simple Features Collection of polygons
@@ -350,10 +350,10 @@ osm_lines <- function (dat, id) {
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' # Extract polygons which intersect Conway Street in London
-#' dat <- opq ("Marylebone London") %>%
-#'     add_osm_feature (key = "highway") %>%
+#' \dontrun{
+#' dat <- opq ("Marylebone London") |>
+#'     add_osm_feature (key = "highway") |>
 #'     osmdata_sf ()
 #' conway <- which (dat$osm_lines$name == "Conway Street")
 #' id <- rownames (dat$osm_lines [conway, ])
@@ -382,7 +382,7 @@ osm_polygons <- function (dat, id) {
 }
 
 
-#' Extract all `osm_multilines` from an osmdata object
+#' Extract all `osm_multilines` from an `osmdata_sf` object
 #'
 #' `id` must be of an `osm_points` or `osm_lines` object (and can
 #' not be the `id` of an `osm_polygons` object because multilines by
@@ -390,7 +390,7 @@ osm_polygons <- function (dat, id) {
 #' object(s) which contain the object specified by `id`.
 #'
 #'
-#' @param dat An object of class \link{osmdata}
+#' @param dat An object of class `osmdata_sf`
 #' @param id OSM identification of one of more objects for which multilines are
 #' to be extracted
 #' @return An \pkg{sf} Simple Features Collection of multilines
@@ -400,8 +400,8 @@ osm_polygons <- function (dat, id) {
 #'
 #' @examples
 #' \dontrun{
-#' dat <- opq ("London UK") %>%
-#'     add_osm_feature (key = "name", value = "Thames", exact = FALSE) %>%
+#' dat <- opq ("London UK") |>
+#'     add_osm_feature (key = "name", value = "Thames", exact = FALSE) |>
 #'     osmdata_sf ()
 #' # Get ids of lines called "The Thames":
 #' id <- rownames (dat$osm_lines [which (dat$osm_lines$name == "The Thames"), ])
@@ -434,14 +434,14 @@ osm_multilines <- function (dat, id) {
     dat$osm_multilines [which (rownames (dat$osm_multilines) %in% ids), ]
 }
 
-#' Extract all `osm_multipolygons` from an osmdata object
+#' Extract all `osm_multipolygons` from an `osmdata_sf` object
 #'
 #' `id` must be of an `osm_points`, `osm_lines`, or
 #' `osm_polygons` object. `osm_multipolygons` returns any multipolygon
 #' object(s) which contain the object specified by `id`.
 #'
 #'
-#' @param dat An object of class \link{osmdata}
+#' @param dat An object of class `osmdata_sf`
 #' @param id OSM identification of one or more objects for which multipolygons
 #' are to be extracted
 #' @return An \pkg{sf} Simple Features Collection of multipolygons
@@ -450,11 +450,11 @@ osm_multilines <- function (dat, id) {
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' # find all multipolygons which contain the single polygon called
 #' # "Chiswick Eyot" (which is an island).
-#' dat <- opq ("London UK") %>%
-#'     add_osm_feature (key = "name", value = "Thames", exact = FALSE) %>%
+#' \dontrun{
+#' dat <- opq ("London UK") |>
+#'     add_osm_feature (key = "name", value = "Thames", exact = FALSE) |>
 #'     osmdata_sf ()
 #' index <- which (dat$osm_multipolygons$name == "Chiswick Eyot")
 #' id <- rownames (dat$osm_polygons [id, ])

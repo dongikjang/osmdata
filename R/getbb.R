@@ -20,6 +20,11 @@
 #' @export
 #'
 #' @examples
+#' # Note input is (lon, lat) = (x, y) but output as needed for 'Overpass' API
+#' # is (lat, lon) = (y, x).
+#' bb <- c (-0.4325512, 39.2784496, -0.2725205, 39.566609)
+#' bbox_to_string (bb)
+#' # This is equivalent to:
 #' \dontrun{
 #' bbox_to_string (getbb ("València"))
 #' bbox_to_string (getbb ("València", format_out = "data.frame"))
@@ -375,10 +380,9 @@ get_geotext_poly <- function (obj) {
     gt_p <- NULL
     indx <- which (!(seq (nrow (obj)) %in% indx_multi))
     index_final <- index_final [indx]
-    gt_p <- obj$geotext [indx] %>%
-        gsub ("POLYGON\\(\\(", "", .) %>%
-        gsub ("\\)\\)", "", .) %>%
-        strsplit (split = ",")
+    ptn <- "(POLYGON\\(\\()|(\\)\\))"
+    gt_p <- gsub (ptn, "", obj$geotext [indx])
+    gt_p <- strsplit (gt_p, split = ",")
     indx_na <- rev (which (is.na (gt_p)))
     for (i in indx_na) {
         gt_p [[i]] <- NULL
@@ -431,10 +435,9 @@ get_geotext_multipoly <- function (obj) {
     # nocov start
     # TODO: Test this
     if (length (indx_multi) > 0) {
-        gt_mp <- obj$geotext [indx_multi] %>%
-            gsub ("MULTIPOLYGON\\(\\(\\(", "", .) %>%
-            gsub ("\\)\\)\\)", "", .) %>%
-            strsplit (split = ",")
+        ptn <- "(MULTIPOLYGON\\(\\(\\()|(\\)\\)\\))"
+        gt_mp <- gsub (ptn, "", obj$geotext [indx_multi])
+        gt_mp <- strsplit (gt_mp, split = ",")
         indx_na <- rev (which (is.na (gt_mp)))
         for (i in indx_na) {
             gt_mp [[i]] <- NULL

@@ -1,16 +1,7 @@
-#' Return an OSM Overpass query as an \link{osmdata} object in \pkg{sp}
+#' DEPRECATED: Return an OSM Overpass query as an \link{osmdata} object in \pkg{sp}
 #' format.
 #'
-#' @param q An object of class `overpass_query` constructed with
-#'      \link{opq} and \link{add_osm_feature} or a string with a valid query, such
-#'      as `"(node(39.4712701,-0.3841326,39.4713799,-0.3839475);); out;"`.
-#'      39.4712701,-0.3841326,39.4713799,-0.3839475
-#'      May be be omitted, in which case the \link{osmdata} object will not
-#'      include the query. See examples below.
-#' @param doc If missing, `doc` is obtained by issuing the overpass query,
-#'        `q`, otherwise either the name of a file from which to read data,
-#'        or an object of class \pkg{xml2} returned from \link{osmdata_xml}.
-#' @param quiet suppress status messages.
+#' @inheritParams osmdata_sf
 #'
 #' @return An object of class `osmdata` with the OSM components (points, lines,
 #'         and polygons) represented in \pkg{sp} format.
@@ -20,9 +11,11 @@
 #'
 #' @examples
 #' \dontrun{
-#' hampi_sp <- opq ("hampi india") %>%
-#'     add_osm_feature (key = "historic", value = "ruins") %>%
-#'     osmdata_sp ()
+#' query <- opq ("hampi india") |>
+#'     add_osm_feature (key = "historic", value = "ruins")
+#' # Then extract data from 'Overpass' API
+#' hampi_sp <- osmdata_sp (query)
+#' }
 #'
 #' # Complex query as a string (not possible with regular osmdata functions)
 #' q <- '[out:xml][timeout:50];
@@ -40,10 +33,17 @@
 #'     (._; >;);
 #'     out;'
 #'
+#' \dontrun{
 #' no_townhall <- osmdata_sp (q)
 #' no_townhall
 #' }
 osmdata_sp <- function (q, doc, quiet = TRUE) {
+
+    .Deprecated (
+        new = "osmdata_sf () or osmdata_sc ()",
+        package = "osmdata",
+        old = "osmdata_sp ()"
+    )
 
     obj <- osmdata () # uses class def
     if (missing (q)) {

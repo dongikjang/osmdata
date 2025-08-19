@@ -1,10 +1,23 @@
 #' Return an OSM Overpass query as an \link{osmdata} object in \pkg{sf}
 #' format.
 #'
-#' @inheritParams osmdata_sp
+#' @note In 'dplyr'-type workflows in which the output of this function is
+#' piped to other functions, it will generally be necessary to explicitly load
+#' the \pkg{sf} package into the current workspace with 'library(sf)'.
+#'
+#' @param q An object of class `overpass_query` constructed with
+#'      \link{opq} and \link{add_osm_feature} or a string with a valid query, such
+#'      as `"(node(39.4712701,-0.3841326,39.4713799,-0.3839475);); out;"`.
+#'      39.4712701,-0.3841326,39.4713799,-0.3839475
+#'      May be be omitted, in which case the \link{osmdata} object will not
+#'      include the query. See examples below.
+#' @param doc If missing, `doc` is obtained by issuing the overpass query,
+#'        `q`, otherwise either the name of a file from which to read data,
+#'        or an object of class \pkg{xml2} returned from \link{osmdata_xml}.
+#' @param quiet suppress status messages.
 #' @param stringsAsFactors Should character strings in 'sf' 'data.frame' be
 #' coerced to factors?
-#' @return An object of class `osmdata` with the OSM components (points, lines,
+#' @return An object of class `osmdata_sf` with the OSM components (points, lines,
 #'         and polygons) represented in \pkg{sf} format.
 #'
 #' @family extract
@@ -12,9 +25,11 @@
 #'
 #' @examples
 #' \dontrun{
-#' hampi_sf <- opq ("hampi india") %>%
-#'     add_osm_feature (key = "historic", value = "ruins") %>%
-#'     osmdata_sf ()
+#' query <- opq ("hampi india") |>
+#'     add_osm_feature (key = "historic", value = "ruins")
+#' # Then extract data from 'Overpass' API
+#' hampi_sf <- osmdata_sf (query)
+#' }
 #'
 #' # Complex query as a string (not possible with regular osmdata functions)
 #' q <- '[out:xml][timeout:50];
@@ -32,6 +47,7 @@
 #'     (._; >;);
 #'     out;'
 #'
+#' \dontrun{
 #' no_townhall <- osmdata_sf (q)
 #' no_townhall
 #' }
@@ -98,7 +114,7 @@ osmdata_sf <- function (q, doc, quiet = TRUE, stringsAsFactors = FALSE) { # noli
         )
     }
 
-    class (obj) <- c (class (obj), "osmdata_sf")
+    class (obj) <- c ("osmdata_sf", class (obj))
 
     return (obj)
 }
@@ -162,6 +178,12 @@ make_sf <- function (..., stringsAsFactors = FALSE) { # nolint
 
 #' Merge any `sf` `data.frame` columns which have mixed-case duplicated names
 #' (like "This" and "this"; #348).
+#'
+#' @param df a `data.frame`
+#' @return Returns the `df` without duplicated columnms. If both values in a
+#'   row of the duplicated columns are not NA, use the value of the first column.
+#'
+#' @noRd
 merge_duplicated_col_names <- function (df) {
 
     nms_lower <- tolower (names (df))

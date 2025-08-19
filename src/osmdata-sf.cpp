@@ -111,6 +111,8 @@ Rcpp::List osm_sf::get_osm_relations (const Relations &rels,
 
     Rcpp::CharacterMatrix kv_mat_mp (Rcpp::Dimension (nmp, ncol)),
         kv_mat_ls (Rcpp::Dimension (nls, ncol));
+    std::fill (kv_mat_mp.begin (), kv_mat_mp.end (), NA_STRING);
+    std::fill (kv_mat_ls.begin (), kv_mat_ls.end (), NA_STRING);
     unsigned int count_mp = 0, count_ls = 0;
 
     for (auto itr = rels.begin (); itr != rels.end (); ++itr)
@@ -183,7 +185,7 @@ Rcpp::List osm_sf::get_osm_relations (const Relations &rels,
     }
 
     // Erase any multipolygon ways that are not okay. An example of these is
-    // opq("salzburg") %>% add_osm_feature (key = "highway"), for which
+    // opq("salzburg") |> add_osm_feature (key = "highway"), for which
     // $osm_multipolygons [[42]] with way#4108738 is not okay.
     std::vector <std::string> not_okay_id;
     for (size_t i = 0; i < mp_okay.size (); i++)

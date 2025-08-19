@@ -1,8 +1,3 @@
-context ("data_frame-osm")
-
-test_all <- (identical (Sys.getenv ("MPADGE_LOCAL"), "true") |
-    identical (Sys.getenv ("GITHUB_WORKFLOW"), "test-coverage"))
-
 test_that ("multipolygon", {
     osm_multi <- test_path ("fixtures", "osm-multi.osm")
     x_sf <- sf::st_read (
@@ -73,7 +68,7 @@ test_that ("empty result", {
     rownames (bb) <- c ("x", "y")
     colnames (bb) <- c ("min", "max")
 
-    q0 <- opq (bb, nodes_only = TRUE, datetime = "1714-09-11T00:00:00Z") %>%
+    q0 <- opq (bb, osm_types = "node", datetime = "1714-09-11T00:00:00Z") |>
         add_osm_feature ("does not exist", "&%$")
 
     osm_empty <- test_path ("fixtures", "osm-empty.osm")
@@ -102,13 +97,13 @@ test_that ("empty result", {
     expect_null (meta_l$meta_no_call$query_type)
 
     # adiff
-    # q0 <- getbb ("Països Catalans", featuretype = "relation") %>%
+    # q0 <- getbb ("Països Catalans", featuretype = "relation") |>
     q0 <- opq (
         bb,
-        nodes_only = TRUE,
+        osm_types = "node",
         datetime = "1714-09-11T00:00:00Z",
         adiff = TRUE
-    ) %>%
+    ) |>
         add_osm_feature ("does not exist", "&%$")
 
     # osm_empty <- test_path ("fixtures", "osm-empty.osm") # same result
@@ -181,9 +176,9 @@ test_that ("date", {
     bb <- rbind (c (2.01, 2.66), c (42.42, 42.71))
     rownames (bb) <- c ("x", "y")
     colnames (bb) <- c ("min", "max")
-    q <- opq (bb, nodes_only = TRUE, datetime = "2020-11-07T00:00:00Z") %>%
-        add_osm_feature ("natural", "peak") %>%
-        add_osm_feature ("prominence") %>%
+    q <- opq (bb, osm_types = "node", datetime = "2020-11-07T00:00:00Z") |>
+        add_osm_feature ("natural", "peak") |>
+        add_osm_feature ("prominence") |>
         add_osm_feature ("name:ca")
 
     osm_meta_date <- test_path ("fixtures", "osm-date.osm")
@@ -222,11 +217,11 @@ test_that ("date", {
 })
 
 test_that ("out tags center", {
-    # q <- getbb ("Franja de Ponent", featuretype = "relation") %>%
+    # q <- getbb ("Franja de Ponent", featuretype = "relation") |>
     bb <- rbind (c (-0.73, 1.27), c (40.63, 42.63))
     rownames (bb) <- c ("x", "y")
     colnames (bb) <- c ("min", "max")
-    q <- opq (bb, out = "tags center") %>%
+    q <- opq (bb, out = "tags center") |>
         add_osm_feature ("amenity", "community_centre")
 
     osm_tags_center <- test_path ("fixtures", "osm-tags_center.osm")
@@ -254,17 +249,17 @@ test_that ("out tags center", {
 })
 
 test_that ("out meta & diff", {
-    # q <- getbb ("Conflent", featuretype = "relation") %>%
+    # q <- getbb ("Conflent", featuretype = "relation") |>
     bb <- rbind (c (2.01, 2.66), c (42.42, 42.71))
     rownames (bb) <- c ("x", "y")
     colnames (bb) <- c ("min", "max")
     q <- opq (bb,
-        nodes_only = TRUE, out = "meta",
+        osm_types = "node", out = "meta",
         datetime = "2020-11-07T00:00:00Z",
         datetime2 = "2022-12-04T00:00:00Z"
-    ) %>%
-        add_osm_feature ("natural", "peak") %>%
-        add_osm_feature ("prominence") %>%
+    ) |>
+        add_osm_feature ("natural", "peak") |>
+        add_osm_feature ("prominence") |>
         add_osm_feature ("name:ca")
 
     osm_meta_diff <- test_path ("fixtures", "osm-meta_diff.osm")
@@ -307,16 +302,16 @@ test_that ("out meta & diff", {
 })
 
 test_that ("out meta & adiff", {
-    # q <- getbb ("Conflent", featuretype = "relation") %>%
+    # q <- getbb ("Conflent", featuretype = "relation") |>
     bb <- rbind (c (2.01, 2.66), c (42.42, 42.71))
     rownames (bb) <- c ("x", "y")
     colnames (bb) <- c ("min", "max")
     q <- opq (bb,
-        nodes_only = TRUE, out = "meta",
+        osm_types = "node", out = "meta",
         datetime = "2020-11-07T00:00:00Z", adiff = TRUE
-    ) %>%
-        add_osm_feature ("natural", "peak") %>%
-        add_osm_feature ("prominence") %>%
+    ) |>
+        add_osm_feature ("natural", "peak") |>
+        add_osm_feature ("prominence") |>
         add_osm_feature ("name:ca")
 
     osm_meta_adiff <- test_path ("fixtures", "osm-meta_adiff.osm")
@@ -365,7 +360,7 @@ test_that ("out meta & adiff", {
 })
 
 test_that ("out tags center & adiff", {
-    # q <- getbb ("Franja de Ponent", featuretype = "relation") %>%
+    # q <- getbb ("Franja de Ponent", featuretype = "relation") |>
     bb <- rbind (c (-0.73, 1.27), c (40.63, 42.63))
     rownames (bb) <- c ("x", "y")
     colnames (bb) <- c ("min", "max")
@@ -376,7 +371,7 @@ test_that ("out tags center & adiff", {
         datetime2 = "2020-11-07T00:00:00Z",
         adiff = TRUE,
         timeout = 50
-    ) %>%
+    ) |>
         add_osm_feature ("amenity", "community_centre")
 
     osm_tags_center <- test_path ("fixtures", "osm-tags_center-adiff.osm")
@@ -421,11 +416,11 @@ test_that ("adiff2", {
     rownames (bb) <- c ("x", "y")
     colnames (bb) <- c ("min", "max")
     q <- opq (bb,
-        nodes_only = TRUE,
+        osm_types = "node",
         datetime = "2012-11-07T00:00:00Z",
         datetime2 = "2016-11-07T00:00:00Z",
         adiff = TRUE
-    ) %>%
+    ) |>
         add_osm_feature ("amenity", "restaurant")
 
     osm_adiff2 <- test_path ("fixtures", "osm-adiff2.osm")
@@ -465,10 +460,10 @@ test_that ("adiff2", {
 })
 
 test_that ("out:csv", {
-    # q <- getbb ("Catalan Countries", format_out = "osm_type_id") %>%
-    q <- opq (bbox = "relation(id:11747082)", out = "tags center", osm_type = "relation", timeout = 50) %>%
-        add_osm_feature ("admin_level", "7") %>%
-        add_osm_feature ("boundary", "administrative") %>%
+    # q <- getbb ("Catalan Countries", format_out = "osm_type_id") |>
+    q <- opq (bbox = "relation(id:11747082)", out = "tags center", osm_type = "relation", timeout = 50) |>
+        add_osm_feature ("admin_level", "7") |>
+        add_osm_feature ("boundary", "administrative") |>
         opq_csv (fields = c ("name", "::type", "::id", "::lat", "::lon"))
 
     with_mock_dir ("mock_csv", {
@@ -478,9 +473,9 @@ test_that ("out:csv", {
     r <- lapply (x, expect_is, "character")
 
     # Test quotes and NAs
-    # qqoutes <- getbb ("Barcelona", format_out = "osm_type_id") %>%
-    qqoutes <- opq (bbox = "relation(id:347950)", osm_types = "nwr", out = "tags") %>%
-        opq_csv (fields = c ("name", "::id", "no_exists", "amenity")) %>%
+    # qqoutes <- getbb ("Barcelona", format_out = "osm_type_id") |>
+    qqoutes <- opq (bbox = "relation(id:347950)", osm_types = "nwr", out = "tags") |>
+        opq_csv (fields = c ("name", "::id", "no_exists", "amenity")) |>
         add_osm_feature (
             key = "name", value = "\\\"|,|Pont",
             value_exact = FALSE

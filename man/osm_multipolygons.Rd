@@ -2,12 +2,12 @@
 % Please edit documentation in R/osm-extract.R
 \name{osm_multipolygons}
 \alias{osm_multipolygons}
-\title{Extract all \code{osm_multipolygons} from an osmdata object}
+\title{Extract all \code{osm_multipolygons} from an \code{osmdata_sf} object}
 \usage{
 osm_multipolygons(dat, id)
 }
 \arguments{
-\item{dat}{An object of class \link{osmdata}}
+\item{dat}{An object of class \code{osmdata_sf}}
 
 \item{id}{OSM identification of one or more objects for which multipolygons
 are to be extracted}
@@ -21,11 +21,11 @@ An \pkg{sf} Simple Features Collection of multipolygons
 object(s) which contain the object specified by \code{id}.
 }
 \examples{
-\dontrun{
 # find all multipolygons which contain the single polygon called
 # "Chiswick Eyot" (which is an island).
-dat <- opq ("London UK") \%>\%
-    add_osm_feature (key = "name", value = "Thames", exact = FALSE) \%>\%
+\dontrun{
+dat <- opq ("London UK") |>
+    add_osm_feature (key = "name", value = "Thames", exact = FALSE) |>
     osmdata_sf ()
 index <- which (dat$osm_multipolygons$name == "Chiswick Eyot")
 id <- rownames (dat$osm_polygons [id, ])

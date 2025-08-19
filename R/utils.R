@@ -1,4 +1,3 @@
-
 is_datetime <- function (x) {
 
     ptn <- "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}[A-Z]$"
@@ -18,11 +17,14 @@ is_datetime <- function (x) {
 #' @param x An 'osmdata_sf' object returned from function of same name
 #' @return Same object, yet with no row names on geometry objects.
 #' @family transform
+#'
 #' @examples
 #' \dontrun{
-#' hampi_sf <- opq ("hampi india") %>%
-#'     add_osm_feature (key = "historic", value = "ruins") %>%
-#'     osmdata_sf ()
+#' query <- opq ("hampi india") |>
+#'     add_osm_feature (key = "historic", value = "ruins")
+#' # Then extract data from 'Overpass' API
+#' hampi_sf <- osmdata_sf (query)
+#' # Remove rownames from all geometry metrices:
 #' hampi_clean <- unname_osmdata_sf (hampi_sf)
 #'
 #' # All coordinate matrices include rownames with OSM ID values:

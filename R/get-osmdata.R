@@ -23,13 +23,9 @@ get_timestamp <- function (doc) {
         tstmp <- Sys.time ()
     }
 
-    wday_t <- lubridate::wday (tstmp, label = TRUE)
-    wday <- lubridate::wday (tstmp, label = FALSE)
-    mon <- lubridate::month (tstmp, label = TRUE)
-    year <- lubridate::year (tstmp)
-
-    hms <- strsplit (as.character (tstmp), " ") [[1]] [2]
-    paste ("[", wday_t, wday, mon, year, hms, "]")
+    out <- paste ("[", format (tstmp, format = "%a %e %b %Y %T"), "]")
+    out <- gsub ("  ", " ", out) # remove extra space in %e for single digit days
+    out <- gsub ("\\.", "\\\\.", out) # Escape dots
 }
 
 
@@ -111,7 +107,7 @@ fix_duplicated_columns <- function (x) {
     dup <- duplicated (x)
     i <- 1
     while (any (dup)) {
-        x[dup] <- paste0 (x[dup], ".", i)
+        x [dup] <- paste0 (x [dup], ".", i)
         i <- i + 1
         dup <- duplicated (x)
     }
@@ -128,7 +124,7 @@ fix_columns_list <- function (l) {
             "Feature keys clash with id or metadata columns and will be ",
             "renamed by appending `.n`:\n\t",
             paste (
-                unique (setdiff (unlist (cols_no_dup), unlist(cols))),
+                unique (setdiff (unlist (cols_no_dup), unlist (cols))),
                 collapse = ", "
             )
         )
@@ -147,7 +143,7 @@ fix_columns_list <- function (l) {
 #'
 #' @param obj Initial \link{osmdata} object
 #' @param doc Document contain XML-formatted version of OSM data
-#' @inheritParams osmdata_sp
+#' @inheritParams osmdata_sf
 #' @return List of an \link{osmdata} object (`obj`), and XML
 #'      document (`doc`)
 #' @noRd
@@ -213,7 +209,7 @@ get_metadata <- function (obj, doc) {
             meta$datetime_from <- x [2]
             meta$datetime_to <- x [4]
             if (!is_datetime (meta$datetime_to) &
-                inherits(doc, "xml_document")) { # adiff opq without datetime2
+                inherits (doc, "xml_document")) { # adiff opq without datetime2
                 meta$datetime_to <- xml2::xml_text (xml2::xml_find_all (
                     doc,
                     "//meta/@osm_base"
@@ -240,8 +236,8 @@ get_metadata <- function (obj, doc) {
 
             if (grepl ("adiff", q$prefix) ||
                 (
-                    inherits(doc, "xml_document") &&
-                    "action" %in% xml2::xml_name (xml2::xml_children (doc))
+                    inherits (doc, "xml_document") &&
+                        "action" %in% xml2::xml_name (xml2::xml_children (doc))
                 )
             ) {
                 meta$query_type <- "adiff"
@@ -253,8 +249,8 @@ get_metadata <- function (obj, doc) {
 
             if (grepl ("adiff", q$prefix) ||
                 (
-                    inherits(doc, "xml_document") &&
-                    "action" %in% xml2::xml_name (xml2::xml_children (doc))
+                    inherits (doc, "xml_document") &&
+                        "action" %in% xml2::xml_name (xml2::xml_children (doc))
                 )
             ) {
                 meta$datetime_from <- attr (q, "datetime")
@@ -270,7 +266,7 @@ get_metadata <- function (obj, doc) {
 
         }
 
-    } else if (inherits(doc, "xml_document")) { # is.null (q)
+    } else if (inherits (doc, "xml_document")) { # is.null (q)
 
         if ("action" %in% xml2::xml_name (xml2::xml_children (doc))) {
             osm_actions <- xml2::xml_find_all (doc, ".//action")

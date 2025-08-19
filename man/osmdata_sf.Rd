@@ -25,18 +25,25 @@ or an object of class \pkg{xml2} returned from \link{osmdata_xml}.}
 coerced to factors?}
 }
 \value{
-An object of class \code{osmdata} with the OSM components (points, lines,
+An object of class \code{osmdata_sf} with the OSM components (points, lines,
 and polygons) represented in \pkg{sf} format.
 }
 \description{
 Return an OSM Overpass query as an \link{osmdata} object in \pkg{sf}
 format.
 }
+\note{
+In 'dplyr'-type workflows in which the output of this function is
+piped to other functions, it will generally be necessary to explicitly load
+the \pkg{sf} package into the current workspace with 'library(sf)'.
+}
 \examples{
 \dontrun{
-hampi_sf <- opq ("hampi india") \%>\%
-    add_osm_feature (key = "historic", value = "ruins") \%>\%
-    osmdata_sf ()
+query <- opq ("hampi india") |>
+    add_osm_feature (key = "historic", value = "ruins")
+# Then extract data from 'Overpass' API
+hampi_sf <- osmdata_sf (query)
+}
 
 # Complex query as a string (not possible with regular osmdata functions)
 q <- '[out:xml][timeout:50];
@@ -54,6 +61,7 @@ q <- '[out:xml][timeout:50];
     (._; >;);
     out;'
 
+\dontrun{
 no_townhall <- osmdata_sf (q)
 no_townhall
 }

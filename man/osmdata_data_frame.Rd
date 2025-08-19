@@ -23,8 +23,8 @@ or an object of class \pkg{xml2} returned from \link{osmdata_xml}.}
 coerced to factors?}
 }
 \value{
-A \code{data.frame} with id, type and tags of the the objects from the
-query.
+A \code{data.frame} inheriting from \code{osmdata_data.frame} class with id, type
+and tags of the the objects from the query.
 }
 \description{
 Return an OSM Overpass query as a \link{data.frame} object.
@@ -37,12 +37,14 @@ the parameter \code{body = "tags"} to \code{\link{opq}}.
 }
 \examples{
 \dontrun{
-hampi_df <- opq ("hampi india") \%>\%
-    add_osm_feature (key = "historic", value = "ruins") \%>\%
-    osmdata_data_frame ()
+query <- opq ("hampi india") |>
+    add_osm_feature (key = "historic", value = "ruins")
+# Then extract data from 'Overpass' API
+hampi_df <- osmdata_data_frame (query)
 attr (hampi_df, "bbox")
 attr (hampi_df, "overpass_call")
 attr (hampi_df, "meta")
+}
 
 # Complex query as a string (not possible with regular osmdata functions)
 q <- '[out:csv(::type, ::id, "name:ca", "wikidata")][timeout:50];
@@ -59,6 +61,7 @@ q <- '[out:csv(::type, ::id, "name:ca", "wikidata")][timeout:50];
     rel(pivot);
     out tags;'
 
+\dontrun{
 no_townhall <- osmdata_data_frame (q)
 no_townhall
 }
